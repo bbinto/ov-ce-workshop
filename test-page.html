@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Officevibe AI Assistant — UI Preview</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #1f2937;
+      padding: 24px;
+    }
+
+    .preview-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .preview-title .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #5c6ac4;
+      display: inline-block;
+    }
+
+    /* Main 3-column layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 320px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ── Column labels ── */
+    .col-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .col-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    /* ── Mock Officevibe card ── */
+    .ov-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: 18px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .ov-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .ov-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+
+    .ov-feedback-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #374151;
+    }
+
+    .ov-timestamp {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    /* ── Popup frame ── */
+    .popup-frame {
+      border: 1.5px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    }
+
+    /* ── Insights card ── */
+    .insights-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: 18px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .insights-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #5c6ac4 0%, #7c3aed 100%);
+      color: #fff;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+
+    .insights-header-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .analyze-badge {
+      padding: 3px 10px;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="preview-title">
+  <span class="dot"></span>
+  Officevibe AI Assistant — Component Preview
+</div>
+
+<div class="main-grid">
+
+  <!-- Column 1: Feedback cards + AI inject panel -->
+  <div>
+    <div class="col-label">Feedback Inbox (mock Officevibe page)</div>
+
+    <!-- Card 1 -->
+    <div class="ov-card">
+      <div class="ov-meta">
+        <div class="ov-avatar" style="background:linear-gradient(135deg,#5c6ac4,#7c3aed)">?</div>
+        <span class="ov-timestamp">Anonymous · 2 hours ago</span>
+      </div>
+      <p class="ov-feedback-text">
+        I feel like our team meetings are too long and could be more focused. We spend a lot of time going over status updates that could just be shared in a document. I'd love to have shorter, more strategic discussions.
+      </p>
+
+      <!-- AI Panel (open by default) -->
+      <div id="aiPanel" class="ov-ai-assistant-panel">
+        <div class="ov-ai-assistant-panel-header">
+          <span class="ov-ai-assistant-panel-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+            AI Response Suggestions
+          </span>
+          <button class="ov-ai-assistant-panel-close" onclick="togglePanel()">✕</button>
+        </div>
+        <div class="ov-ai-assistant-panel-body">
+          <div class="ov-ai-assistant-tone-selector">
+            <span class="ov-ai-assistant-tone-label">Tone:</span>
+            <button class="ov-ai-assistant-tone-btn active" onclick="selectTone(this)">Empathetic</button>
+            <button class="ov-ai-assistant-tone-btn" onclick="selectTone(this)">Action-Oriented</button>
+            <button class="ov-ai-assistant-tone-btn" onclick="selectTone(this)">Appreciative</button>
+            <button class="ov-ai-assistant-tone-btn" onclick="selectTone(this)">Investigative</button>
+          </div>
+          <div class="ov-ai-assistant-suggestion-text">
+            Thank you for raising this — meeting fatigue is real and I appreciate you flagging it. Starting next sprint, I'll move status updates to a shared async doc so our syncs stay focused on decisions and blockers. I'd love your feedback after we try it for a couple of weeks.
+          </div>
+          <div class="ov-ai-assistant-actions" style="display:flex">
+            <button class="ov-ai-assistant-copy-btn" onclick="this.textContent='Copied!';setTimeout(()=>this.textContent='Copy to clipboard',1800)">Copy to clipboard</button>
+            <button class="ov-ai-assistant-regen-btn">Regenerate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="ov-card">
+      <div class="ov-meta">
+        <div class="ov-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">?</div>
+        <span class="ov-timestamp">Anonymous · 5 hours ago</span>
+      </div>
+      <p class="ov-feedback-text">
+        I really appreciate the recent changes to how we do code reviews. The new process feels much more collaborative and I'm learning a lot.
+      </p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="ov-card">
+      <div class="ov-meta">
+        <div class="ov-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">?</div>
+        <span class="ov-timestamp">Anonymous · Yesterday</span>
+      </div>
+      <p class="ov-feedback-text">
+        Career growth opportunities feel unclear. I'm not sure what I need to do to get promoted or what the next step looks like here.
+      </p>
+    </div>
+  </div>
+
+  <!-- Column 2: Bulk Insights panel -->
+  <div>
+    <div class="col-label">Bulk AI Insights (sidebar content)</div>
+
+    <div class="insights-card">
+      <div class="insights-header">
+        <div class="insights-header-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
+          AI Feedback Insights
+        </div>
+        <span class="analyze-badge">Re-analyze</span>
+      </div>
+
+      <div class="ov-ai-assistant-insight-section">
+        <h4>Overview</h4>
+        <p>Team feedback reveals concerns around meeting efficiency and career growth clarity, balanced by genuine appreciation for improved code reviews. Engagement is moderate with clear opportunities for structural improvement.</p>
+      </div>
+
+      <div class="ov-ai-assistant-insight-section">
+        <h4>Key Themes</h4>
+        <ul>
+          <li>Meeting effectiveness and time management</li>
+          <li>Career growth transparency and promotion clarity</li>
+          <li>Positive response to collaborative processes</li>
+        </ul>
+      </div>
+
+      <div class="ov-ai-assistant-insight-section">
+        <h4>Sentiment</h4>
+        <div class="ov-ai-assistant-sentiment-bar">
+          <div class="ov-ai-assistant-sentiment-pos" style="width:33%"></div>
+          <div class="ov-ai-assistant-sentiment-neu" style="width:20%"></div>
+          <div class="ov-ai-assistant-sentiment-neg" style="width:47%"></div>
+        </div>
+        <div class="ov-ai-assistant-sentiment-legend">
+          <span class="pos">Positive 33%</span>
+          <span class="neu">Neutral 20%</span>
+          <span class="neg">Negative 47%</span>
+        </div>
+      </div>
+
+      <div class="ov-ai-assistant-insight-section">
+        <h4>Priority Action Items</h4>
+        <ol>
+          <li>Redesign weekly meetings to be async-first</li>
+          <li>Create a clear career progression framework</li>
+          <li>Expand collaborative code review practices</li>
+        </ol>
+      </div>
+
+      <div class="ov-ai-assistant-insight-section">
+        <h4>Notable Feedback</h4>
+        <blockquote>"Status updates could just be shared in a document"</blockquote>
+        <blockquote>"Career growth opportunities feel unclear"</blockquote>
+      </div>
+    </div>
+  </div>
+
+  <!-- Column 3: Extension popup -->
+  <div>
+    <div class="col-label">Extension Popup</div>
+    <div class="popup-frame">
+      <iframe src="popup.html" width="318" height="490" style="display:block;border:none;"></iframe>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Section: Conversation detail (Share + AI Reply → right-side drawer) ── -->
+<div style="margin-top:32px">
+  <div class="col-label">Conversation Detail — "AI Reply" opens right side panel</div>
+  <div class="ov-card" style="padding:0;overflow:hidden;max-width:700px;">
+
+    <!-- Mock conversation header bar -->
+    <div style="
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 18px;
+      border-bottom:1px solid #e5e7eb;
+      background:#fff;
+    ">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="ov-avatar" style="background:linear-gradient(135deg,#5c6ac4,#7c3aed);width:28px;height:28px;font-size:10px;">?</div>
+        <span style="font-size:13px;font-weight:600;color:#374151;">Anonymous Feedback</span>
+        <span style="font-size:11px;color:#9ca3af;">· 2 hours ago</span>
+      </div>
+
+      <!-- Right-side action buttons: Share + AI Reply -->
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button style="
+          display:inline-flex; align-items:center; gap:5px;
+          padding:6px 12px;
+          border:1px solid #d1d5db;
+          border-radius:6px;
+          background:#fff;
+          color:#374151;
+          font-size:12px;
+          font-weight:500;
+          cursor:pointer;
+        ">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          Share
+        </button>
+
+        <button class="ov-ai-assistant-suggest-btn ov-ai-assistant-detail-btn" onclick="toggleRightPanel()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
+          AI Reply
+        </button>
+      </div>
+    </div>
+
+    <!-- Mock conversation body -->
+    <div style="padding:18px 20px;">
+      <p class="ov-feedback-text">
+        I feel like our team meetings are too long and could be more focused. We spend a lot of time going over status updates that could just be shared in a document.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- AI Reply right-side drawer (fixed, toggled by "AI Reply" button above) -->
+<div id="aiRightPanel" class="ov-ai-assistant-panel">
+  <div class="ov-ai-assistant-panel-header">
+    <span class="ov-ai-assistant-panel-title">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+      </svg>
+      AI Response Suggestions
+    </span>
+    <button class="ov-ai-assistant-panel-close" onclick="toggleRightPanel()">✕</button>
+  </div>
+  <div class="ov-ai-assistant-panel-body">
+
+    <!-- Tone selector -->
+    <div class="ov-ai-assistant-tone-selector" style="margin-bottom:12px;">
+      <span class="ov-ai-assistant-tone-label">Tone:</span>
+      <button class="ov-ai-assistant-tone-btn active" onclick="selectTone(this)">Empathetic</button>
+      <button class="ov-ai-assistant-tone-btn" onclick="selectTone(this)">Action-Oriented</button>
+      <button class="ov-ai-assistant-tone-btn" onclick="selectTone(this)">Appreciative</button>
+      <button class="ov-ai-assistant-tone-btn" onclick="selectTone(this)">Investigative</button>
+    </div>
+
+    <!-- Related Slack threads -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Related Slack Threads</div>
+
+      <div class="ov-ai-assistant-slack-item">
+        <div class="ov-ai-assistant-slack-item-header">
+          <span class="ov-ai-assistant-slack-badge">#team-syncs</span>
+          <span class="ov-ai-assistant-slack-item-author">alex.chen · Jan 14</span>
+        </div>
+        <div class="ov-ai-assistant-slack-item-text">We tried async standups for two weeks and it cut our daily sync from 30min to 10min — highly recommend the experiment.</div>
+        <div class="ov-ai-assistant-slack-suggestion">
+          <span class="ov-ai-assistant-slack-suggestion-label">💡 Use in reply</span>
+          Reference the async standup experiment from #team-syncs as a concrete approach you could pilot.
+        </div>
+        <a href="#" class="ov-ai-assistant-slack-link">View thread in Slack ↗</a>
+      </div>
+
+      <div class="ov-ai-assistant-slack-item">
+        <div class="ov-ai-assistant-slack-item-header">
+          <span class="ov-ai-assistant-slack-badge">#retro</span>
+          <span class="ov-ai-assistant-slack-item-author">sarah.kim · Jan 9</span>
+        </div>
+        <div class="ov-ai-assistant-slack-item-text">Team agreed: status updates move to a Notion doc. Only blockers and decisions discussed in meetings going forward.</div>
+        <div class="ov-ai-assistant-slack-suggestion">
+          <span class="ov-ai-assistant-slack-suggestion-label">💡 Use in reply</span>
+          Mention the retro decision to shift status updates to Notion — shows the team already aligned on this.
+        </div>
+        <a href="#" class="ov-ai-assistant-slack-link">View thread in Slack ↗</a>
+      </div>
+    </div>
+
+    <div class="ov-ai-assistant-suggestion-text">
+      Thank you for raising this — meeting fatigue is real. We already started moving status updates to a shared doc based on last quarter's retro, and I'll accelerate that for our next sprint. I'd love to chat about what else would make our syncs feel more worthwhile.
+    </div>
+    <div class="ov-ai-assistant-actions" style="display:flex;margin-top:10px;">
+      <button class="ov-ai-assistant-copy-btn">Copy to clipboard</button>
+      <button class="ov-ai-assistant-regen-btn">Regenerate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating action button -->
+<button id="ov-ai-assistant-fab" class="ov-ai-assistant-fab" title="Open AI Feedback Assistant">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+  </svg>
+</button>
+
+<script>
+  function toggleRightPanel() {
+    const p = document.getElementById('aiRightPanel');
+    p.style.display = p.style.display === 'none' ? '' : 'none';
+  }
+  function selectTone(btn) {
+    document.querySelectorAll('.ov-ai-assistant-tone-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

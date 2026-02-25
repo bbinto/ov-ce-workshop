@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Officevibe AI Assistant</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 320px;
+      min-height: 100px;
+      max-height: 580px;
+      overflow-y: auto;
+      background: #ffffff;
+      color: #1a1a2e;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #5c6ac4 0%, #7c3aed 100%);
+      padding: 16px 20px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header svg {
+      flex-shrink: 0;
+    }
+
+    .header-text h1 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .header-text p {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    .body {
+      padding: 16px 20px;
+    }
+
+    .section {
+      margin-bottom: 16px;
+    }
+
+    .section label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .optional-tag {
+      display: inline-block;
+      padding: 1px 5px;
+      background: #f3f4f6;
+      color: #9ca3af;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 8px 36px 8px 10px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.15s;
+      background: #f9fafb;
+    }
+
+    .input-group input:focus {
+      border-color: #5c6ac4;
+      background: #fff;
+    }
+
+    .toggle-visibility {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-visibility:hover {
+      color: #5c6ac4;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .hint a {
+      color: #5c6ac4;
+      text-decoration: none;
+    }
+
+    .hint a:hover {
+      text-decoration: underline;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.15s;
+      background: #f9fafb;
+      font-family: inherit;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+    }
+
+    select:focus {
+      border-color: #5c6ac4;
+      background-color: #fff;
+    }
+
+    .hint code {
+      font-family: "SF Mono", "Fira Code", monospace;
+      background: #f3f4f6;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 10px;
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 10px;
+      background: #5c6ac4;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: 4px;
+    }
+
+    .save-btn:hover {
+      background: #4f5db3;
+    }
+
+    .save-btn:active {
+      transform: scale(0.98);
+    }
+
+    .save-btn.success {
+      background: #10b981;
+    }
+
+    .status-banner {
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .status-banner.has-key {
+      display: block;
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .status-banner.no-key {
+      display: block;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: #f3f4f6;
+      margin: 4px 0 16px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #f3f4f6;
+      margin: 16px 0;
+    }
+
+    .feature-list {
+      list-style: none;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      color: #4b5563;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .feature-list li svg {
+      flex-shrink: 0;
+      color: #5c6ac4;
+      margin-top: 1px;
+    }
+
+    .feature-list li svg.slack-icon {
+      color: #36c5f0;
+    }
+
+    .footer {
+      padding: 10px 20px;
+      background: #f9fafb;
+      border-top: 1px solid #f3f4f6;
+      font-size: 10px;
+      color: #9ca3af;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+    </svg>
+    <div class="header-text">
+      <h1>Officevibe AI Assistant</h1>
+      <p id="headerSubtitle">Powered by Claude · Slack Search</p>
+    </div>
+  </div>
+
+  <div class="body">
+    <div id="statusBanner" class="status-banner"></div>
+
+    <!-- ── API Key ── -->
+    <div class="section">
+      <label>Anthropic API Key</label>
+      <div class="input-group">
+        <input
+          type="password"
+          id="apiKeyInput"
+          placeholder=""
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="toggle-visibility" id="toggleVisibility" title="Show/hide key">
+          <svg id="eyeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+      <p class="hint">Get your key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Stored locally in Chrome sync storage.</p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Claude Model ── -->
+    <div class="section">
+      <label>Claude Model</label>
+      <select id="modelSelect">
+        <option value="claude-haiku-4-5-20251001">Haiku 4.5 — fastest &amp; cheapest</option>
+        <option value="claude-sonnet-4-6">Sonnet 4.6 — balanced (default)</option>
+        <option value="claude-opus-4-6">Opus 4.6 — most capable</option>
+      </select>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── MBTI Personality Type ── -->
+    <div class="section">
+      <label>
+        Your MBTI Type
+        <span class="optional-tag">Optional</span>
+      </label>
+      <select id="mbtiSelect">
+        <option value="">— Select your type —</option>
+        <optgroup label="Analysts">
+          <option value="INTJ">INTJ — Architect</option>
+          <option value="INTP">INTP — Logician</option>
+          <option value="ENTJ">ENTJ — Commander</option>
+          <option value="ENTP">ENTP — Debater</option>
+        </optgroup>
+        <optgroup label="Diplomats">
+          <option value="INFJ">INFJ — Advocate</option>
+          <option value="INFP">INFP — Mediator</option>
+          <option value="ENFJ">ENFJ — Protagonist</option>
+          <option value="ENFP">ENFP — Campaigner</option>
+        </optgroup>
+        <optgroup label="Sentinels">
+          <option value="ISTJ">ISTJ — Logistician</option>
+          <option value="ISFJ">ISFJ — Defender</option>
+          <option value="ESTJ">ESTJ — Executive</option>
+          <option value="ESFJ">ESFJ — Consul</option>
+        </optgroup>
+        <optgroup label="Explorers">
+          <option value="ISTP">ISTP — Virtuoso</option>
+          <option value="ISFP">ISFP — Adventurer</option>
+          <option value="ESTP">ESTP — Entrepreneur</option>
+          <option value="ESFP">ESFP — Entertainer</option>
+        </optgroup>
+      </select>
+      <p class="hint">
+        Helps tailor AI reply suggestions to your natural communication style.
+      </p>
+    </div>
+
+    <button class="save-btn" id="saveBtn">Save Settings</button>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <label>Features</label>
+      <ul class="feature-list">
+        <li>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>AI response suggestions for employee feedback</span>
+        </li>
+        <li>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Multiple response tones (empathetic, action-oriented, etc.)</span>
+        </li>
+        <li>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Bulk feedback analysis with themes &amp; sentiment</span>
+        </li>
+        <li>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Priority action item extraction</span>
+        </li>
+        <li>
+          <svg class="slack-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Similar Slack discussions surfaced per feedback item</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    Works on officevibe.workleap.com &nbsp;·&nbsp; Your data stays local
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

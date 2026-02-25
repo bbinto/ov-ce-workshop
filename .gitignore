@@ -1,0 +1,22 @@
+# Credentials — never commit real tokens
+config.js
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node (icon generation script)
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+*.zip

@@ -1,0 +1,1435 @@
+/* Officevibe AI Assistant — injected styles */
+
+:root {
+  --ov-ai-primary: #5c6ac4;
+  --ov-ai-primary-hover: #4f5db3;
+  --ov-ai-accent: #7c3aed;
+  --ov-ai-success: #10b981;
+  --ov-ai-error: #ef4444;
+  --ov-ai-bg: #ffffff;
+  --ov-ai-surface: #f9fafb;
+  --ov-ai-border: #e5e7eb;
+  --ov-ai-text: #1f2937;
+  --ov-ai-text-muted: #6b7280;
+  --ov-ai-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+  --ov-ai-radius: 10px;
+  --ov-ai-z: 999999;
+}
+
+/* ─── Floating Action Button ──────────────────────────────────────────────── */
+
+#ov-ai-assistant-fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: var(--ov-ai-z);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ov-ai-primary) 0%, var(--ov-ai-accent) 100%);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(92, 106, 196, 0.45);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+  outline: none;
+}
+
+#ov-ai-assistant-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(92, 106, 196, 0.55);
+}
+
+#ov-ai-assistant-fab:active {
+  transform: scale(0.95);
+}
+
+/* ─── Inline Suggest Button ───────────────────────────────────────────────── */
+
+.ov-ai-assistant-btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.ov-ai-assistant-suggest-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ov-ai-primary);
+  background: rgba(92, 106, 196, 0.08);
+  border: 1.5px solid rgba(92, 106, 196, 0.25);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.ov-ai-assistant-suggest-btn:hover {
+  background: rgba(92, 106, 196, 0.15);
+  border-color: var(--ov-ai-primary);
+  color: var(--ov-ai-primary-hover);
+}
+
+.ov-ai-assistant-suggest-btn:active {
+  transform: scale(0.97);
+}
+
+/* ─── AI Panel (fixed right side drawer) ──────────────────────────────────── */
+
+.ov-ai-assistant-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 380px;
+  z-index: 999999;
+  background: var(--ov-ai-bg);
+  border-left: 1.5px solid var(--ov-ai-border);
+  box-shadow: -4px 0 32px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: ov-ai-slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ov-ai-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.ov-ai-assistant-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--ov-ai-primary) 0%, var(--ov-ai-accent) 100%);
+  color: #fff;
+}
+
+.ov-ai-assistant-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.ov-ai-assistant-panel-close {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.ov-ai-assistant-panel-close:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+.ov-ai-assistant-panel-body {
+  padding: 12px 14px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ─── Tone Selector ───────────────────────────────────────────────────────── */
+
+.ov-ai-assistant-tone-selector {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.ov-ai-assistant-tone-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 4px;
+}
+
+.ov-ai-assistant-tone-btn {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 20px;
+  border: 1.5px solid var(--ov-ai-border);
+  background: var(--ov-ai-surface);
+  color: var(--ov-ai-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.ov-ai-assistant-tone-btn:hover {
+  border-color: var(--ov-ai-primary);
+  color: var(--ov-ai-primary);
+}
+
+.ov-ai-assistant-tone-btn.active {
+  background: var(--ov-ai-primary);
+  border-color: var(--ov-ai-primary);
+  color: #fff;
+}
+
+/* ─── Loading State ───────────────────────────────────────────────────────── */
+
+.ov-ai-assistant-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ov-ai-text-muted);
+  padding: 6px 0;
+}
+
+.ov-ai-assistant-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--ov-ai-border);
+  border-top-color: var(--ov-ai-primary);
+  border-radius: 50%;
+  animation: ov-ai-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes ov-ai-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Suggestion Text ─────────────────────────────────────────────────────── */
+
+.ov-ai-assistant-suggestion-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ov-ai-text);
+  background: var(--ov-ai-surface);
+  border: 1px solid var(--ov-ai-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-height: 40px;
+  margin-bottom: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ov-ai-assistant-suggestion-text:empty {
+  display: none;
+}
+
+.ov-ai-assistant-context-used {
+  margin: -2px 0 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ov-ai-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ─── Action Buttons ──────────────────────────────────────────────────────── */
+
+.ov-ai-assistant-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ov-ai-assistant-copy-btn,
+.ov-ai-assistant-regen-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.ov-ai-assistant-copy-btn {
+  background: var(--ov-ai-primary);
+  color: #fff;
+  border: 1.5px solid var(--ov-ai-primary);
+}
+
+.ov-ai-assistant-copy-btn:hover {
+  background: var(--ov-ai-primary-hover);
+  border-color: var(--ov-ai-primary-hover);
+}
+
+.ov-ai-assistant-regen-btn {
+  background: transparent;
+  color: var(--ov-ai-text-muted);
+  border: 1.5px solid var(--ov-ai-border);
+}
+
+.ov-ai-assistant-regen-btn:hover {
+  border-color: var(--ov-ai-primary);
+  color: var(--ov-ai-primary);
+}
+
+/* ─── Error State ─────────────────────────────────────────────────────────── */
+
+.ov-ai-assistant-error {
+  color: var(--ov-ai-error);
+  font-size: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: block;
+}
+
+/* ─── Sidebar ─────────────────────────────────────────────────────────────── */
+
+.ov-ai-assistant-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 340px;
+  background: var(--ov-ai-bg);
+  border-left: 1.5px solid var(--ov-ai-border);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  z-index: var(--ov-ai-z);
+  display: flex;
+  flex-direction: column;
+  animation: ov-ai-slide-right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+@keyframes ov-ai-slide-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.ov-ai-assistant-sidebar-header {
+  padding: 16px 18px;
+  background: linear-gradient(135deg, var(--ov-ai-primary) 0%, var(--ov-ai-accent) 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ov-ai-assistant-sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ov-ai-assistant-analyze-btn {
+  padding: 5px 12px;
+  background: rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.4);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.ov-ai-assistant-analyze-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.ov-ai-assistant-analyze-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ov-ai-assistant-sidebar-close {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.ov-ai-assistant-sidebar-close:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+.ov-ai-assistant-sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+}
+
+.ov-ai-assistant-sidebar-hint {
+  font-size: 13px;
+  color: var(--ov-ai-text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.ov-ai-assistant-sidebar-hint strong {
+  color: var(--ov-ai-primary);
+}
+
+.ov-ai-assistant-sidebar-hint em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ov-ai-text);
+}
+
+/* ─── Insights Container ──────────────────────────────────────────────────── */
+
+.ov-ai-assistant-insight-section {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--ov-ai-border);
+}
+
+.ov-ai-assistant-insight-section:last-child {
+  border-bottom: none;
+}
+
+.ov-ai-assistant-insight-section h4 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ov-ai-text-muted);
+  margin-bottom: 8px;
+}
+
+.ov-ai-assistant-insight-section p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ov-ai-text);
+}
+
+.ov-ai-assistant-insight-section ul,
+.ov-ai-assistant-insight-section ol {
+  padding-left: 18px;
+}
+
+.ov-ai-assistant-insight-section li {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ov-ai-text);
+  margin-bottom: 4px;
+}
+
+.ov-ai-assistant-insight-section blockquote {
+  border-left: 3px solid var(--ov-ai-primary);
+  padding: 6px 12px;
+  margin: 6px 0;
+  background: rgba(92, 106, 196, 0.05);
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ov-ai-text);
+  font-style: italic;
+}
+
+/* ─── Sentiment Bar ───────────────────────────────────────────────────────── */
+
+.ov-ai-assistant-sentiment-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--ov-ai-border);
+  margin-bottom: 6px;
+}
+
+.ov-ai-assistant-sentiment-pos {
+  background: var(--ov-ai-success);
+  transition: width 0.5s;
+}
+
+.ov-ai-assistant-sentiment-neu {
+  background: #f59e0b;
+  transition: width 0.5s;
+}
+
+.ov-ai-assistant-sentiment-neg {
+  background: var(--ov-ai-error);
+  transition: width 0.5s;
+}
+
+.ov-ai-assistant-sentiment-legend {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+}
+
+.ov-ai-assistant-sentiment-legend .pos { color: var(--ov-ai-success); font-weight: 600; }
+.ov-ai-assistant-sentiment-legend .neu { color: #f59e0b; font-weight: 600; }
+.ov-ai-assistant-sentiment-legend .neg { color: var(--ov-ai-error); font-weight: 600; }
+
+/* ─── Use-as-Reply Button ─────────────────────────────────────────────────── */
+
+.ov-ai-assistant-use-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  background: var(--ov-ai-success);
+  color: #fff;
+  border: 1.5px solid var(--ov-ai-success);
+}
+
+.ov-ai-assistant-use-btn:hover {
+  background: #059669;
+  border-color: #059669;
+}
+
+.ov-ai-assistant-use-btn:active {
+  transform: scale(0.97);
+}
+
+/* ─── Detail View Button ──────────────────────────────────────────────────── */
+
+.ov-ai-assistant-detail-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  background: transparent;
+  color: var(--ov-ai-primary);
+  border: 1.5px solid rgba(92, 106, 196, 0.35);
+}
+
+.ov-ai-assistant-detail-btn:hover {
+  background: rgba(92, 106, 196, 0.08);
+  border-color: var(--ov-ai-primary);
+}
+
+/* ─── Slack Section (inside AI panel) ────────────────────────────────────── */
+
+.ov-ai-assistant-slack-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ov-ai-border);
+}
+
+.ov-ai-assistant-slack-section-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.ov-ai-assistant-slack-section-header svg {
+  color: #36c5f0; /* Slack blue */
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-slack-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 6px;
+  background: var(--ov-ai-success);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: auto;
+  letter-spacing: 0;
+}
+
+.ov-ai-assistant-slack-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Individual Slack match card */
+.ov-ai-assistant-slack-item {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s;
+}
+
+.ov-ai-assistant-slack-item:hover {
+  border-color: #86efac;
+}
+
+/* #channel-name pill */
+.ov-ai-assistant-slack-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 7px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  color: #065f46;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  align-self: flex-start;
+}
+
+.ov-ai-assistant-slack-item-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ov-ai-text);
+  word-break: break-word;
+}
+
+.ov-ai-assistant-slack-item-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ov-ai-assistant-slack-item-author {
+  font-size: 10px;
+  color: var(--ov-ai-text-muted);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ov-ai-assistant-slack-link {
+  color: var(--ov-ai-primary);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-slack-link:hover {
+  text-decoration: underline;
+}
+
+/* Item header: channel badge + author · date on one row */
+.ov-ai-assistant-slack-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.ov-ai-assistant-slack-item-author {
+  font-size: 10px;
+  color: var(--ov-ai-text-muted);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* Claude-generated suggestion for incorporating the thread into the reply */
+.ov-ai-assistant-slack-suggestion {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  padding: 6px 9px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #78350f;
+}
+
+.ov-ai-assistant-slack-suggestion-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #b45309;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+}
+
+.ov-ai-assistant-slack-item-error {
+  font-size: 11px;
+  color: var(--ov-ai-error);
+  padding: 4px 0;
+  line-height: 1.4;
+}
+
+/* ─── Glassdoor Section (inside AI panel) ────────────────────────────────── */
+
+.ov-ai-assistant-glassdoor-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ov-ai-border);
+}
+
+.ov-ai-assistant-glassdoor-section-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.ov-ai-assistant-glassdoor-section-header svg {
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-glassdoor-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 6px;
+  background: var(--ov-ai-success);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: auto;
+  letter-spacing: 0;
+}
+
+.ov-ai-assistant-glassdoor-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ov-ai-assistant-glassdoor-item {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ov-ai-assistant-glassdoor-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.ov-ai-assistant-glassdoor-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 7px;
+  background: rgba(245, 158, 11, 0.13);
+  border: 1px solid rgba(245, 158, 11, 0.32);
+  color: #92400e;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  align-self: flex-start;
+}
+
+.ov-ai-assistant-glassdoor-item-meta {
+  font-size: 10px;
+  color: var(--ov-ai-text-muted);
+  text-align: right;
+}
+
+.ov-ai-assistant-glassdoor-item-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ov-ai-text);
+  word-break: break-word;
+}
+
+.ov-ai-assistant-glassdoor-item-error {
+  font-size: 11px;
+  color: var(--ov-ai-error);
+  padding: 4px 0;
+  line-height: 1.4;
+}
+
+/* ─── HR Research Insights Section (inside AI panel) ─────────────────────── */
+
+.ov-ai-assistant-hr-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ov-ai-border);
+}
+
+.ov-ai-assistant-hr-section-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.ov-ai-assistant-hr-section-header svg {
+  color: var(--ov-ai-accent);
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-hr-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 6px;
+  background: var(--ov-ai-accent);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: auto;
+  letter-spacing: 0;
+}
+
+.ov-ai-assistant-hr-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ov-ai-assistant-hr-item {
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s;
+}
+
+.ov-ai-assistant-hr-item:hover {
+  border-color: #c4b5fd;
+}
+
+.ov-ai-assistant-hr-item-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ov-ai-assistant-hr-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  color: #5b21b6;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-hr-item-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ov-ai-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ov-ai-assistant-hr-item-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ov-ai-text);
+  word-break: break-word;
+}
+
+.ov-ai-assistant-hr-item-relevance {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ov-ai-accent);
+  font-style: italic;
+}
+
+.ov-ai-assistant-hr-item-error {
+  font-size: 11px;
+  color: var(--ov-ai-error);
+  padding: 4px 0;
+  line-height: 1.4;
+}
+
+/* ─── Synthetic Slack Card (injected into Officevibe feed) ───────────────── */
+
+.ov-ai-assistant-slack-card {
+  padding: 8px 16px;
+  animation: ov-ai-slide-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ov-ai-assistant-slack-card-inner {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 1px 4px rgba(16, 185, 129, 0.1);
+}
+
+.ov-ai-assistant-slack-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ov-ai-assistant-slack-card-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #065f46;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ov-ai-assistant-slack-card-title svg {
+  color: #36c5f0;
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-slack-card-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ov-ai-text);
+  word-break: break-word;
+}
+
+.ov-ai-assistant-slack-card-meta {
+  font-size: 10px;
+  color: var(--ov-ai-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ─── Home Page Insights Box (injected into .card.empty-checklist-card) ─── */
+
+#ov-ai-assistant-insights-box {
+  padding: 14px;
+}
+
+.ov-ai-assistant-insights-box-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.ov-ai-assistant-insights-box-header svg {
+  color: var(--ov-ai-primary);
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-insights-box-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ov-ai-assistant-insights-box-list li {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ov-ai-text);
+  padding: 7px 10px;
+  background: var(--ov-ai-surface);
+  border: 1px solid var(--ov-ai-border);
+  border-radius: 7px;
+  transition: border-color 0.15s;
+}
+
+.ov-ai-assistant-insights-box-list li:has(a):hover {
+  border-color: var(--ov-ai-primary);
+}
+
+.ov-ai-assistant-metric-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  width: 100%;
+}
+
+.ov-ai-assistant-metric-link:hover {
+  color: var(--ov-ai-primary);
+}
+
+/* ─── Unseen recognition count row (inside insights box) ────────────────── */
+
+.ov-ai-assistant-recognition-unseen-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 7px 10px;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 7px;
+  font-size: 12px;
+  color: #9f1239;
+}
+
+.ov-ai-assistant-recognition-unseen-row svg {
+  flex-shrink: 0;
+  color: #f43f5e;
+}
+
+.ov-ai-assistant-recognition-unseen-label {
+  flex: 1;
+  font-weight: 600;
+}
+
+.ov-ai-assistant-recognition-unseen-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: #f43f5e;
+  color: #fff;
+}
+
+.ov-ai-assistant-recognition-all-seen {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--ov-ai-text-muted);
+  font-style: italic;
+}
+
+/* ─── Workleap Compare section (inside insights box) ────────────────────── */
+
+.ov-ai-assistant-compare-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ov-ai-border);
+}
+
+.ov-ai-assistant-compare-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 7px;
+}
+
+.ov-ai-assistant-compare-section-header svg {
+  color: var(--ov-ai-primary);
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-compare-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--ov-ai-surface);
+  border: 1px solid var(--ov-ai-border);
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+
+.ov-ai-assistant-compare-row:last-child {
+  margin-bottom: 0;
+}
+
+.ov-ai-assistant-compare-row-label {
+  color: var(--ov-ai-text);
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ov-ai-assistant-compare-row-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-compare-row-score {
+  font-weight: 700;
+  color: var(--ov-ai-primary);
+  font-size: 13px;
+}
+
+.ov-ai-assistant-compare-row-change {
+  font-size: 11px;
+  color: var(--ov-ai-text-muted);
+}
+
+/* ─── Recent Feedback section (inside insights box) ─────────────────────── */
+
+.ov-ai-assistant-feedback-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ov-ai-border);
+}
+
+.ov-ai-assistant-feedback-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.ov-ai-assistant-feedback-section-header svg {
+  color: var(--ov-ai-primary);
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-feedback-entry {
+  padding: 8px 10px;
+  background: var(--ov-ai-surface);
+  border: 1px solid var(--ov-ai-border);
+  border-radius: 7px;
+  margin-bottom: 6px;
+}
+
+.ov-ai-assistant-feedback-entry:last-child {
+  margin-bottom: 0;
+}
+
+.ov-ai-assistant-feedback-entry-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.ov-ai-assistant-feedback-entry-date {
+  font-size: 11px;
+  color: var(--ov-ai-text-muted);
+}
+
+.ov-ai-assistant-feedback-entry-elapsed {
+  font-size: 11px;
+  color: var(--ov-ai-text-muted);
+}
+
+.ov-ai-assistant-feedback-status--unread {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--ov-ai-error);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  margin-left: auto;
+}
+
+.ov-ai-assistant-feedback-status--read {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.08);
+  color: var(--ov-ai-success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  margin-left: auto;
+}
+
+.ov-ai-assistant-feedback-entry-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ov-ai-text);
+  margin: 0;
+  word-break: break-word;
+}
+
+/* ─── AI Recommended Actions section (inside insights box) ─────────────── */
+
+.ov-ai-assistant-insights-ai-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ov-ai-border);
+}
+
+.ov-ai-assistant-insights-ai-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.ov-ai-assistant-insights-ai-header svg {
+  color: var(--ov-ai-accent);
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-insights-ai-summary {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ov-ai-text-muted);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.ov-ai-assistant-action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 8px 10px;
+  background: var(--ov-ai-surface);
+  border: 1px solid var(--ov-ai-border);
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  transition: border-color 0.15s;
+}
+
+.ov-ai-assistant-action-item:last-child {
+  margin-bottom: 0;
+}
+
+.ov-ai-assistant-action-item:hover {
+  border-color: var(--ov-ai-primary);
+}
+
+.ov-ai-assistant-action-checkbox {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--ov-ai-primary);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.ov-ai-assistant-action-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ov-ai-assistant-action-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ov-ai-text);
+}
+
+.ov-ai-assistant-action-item input:checked ~ .ov-ai-assistant-action-content .ov-ai-assistant-action-text {
+  text-decoration: line-through;
+  color: var(--ov-ai-text-muted);
+}
+
+.ov-ai-assistant-action-deadline-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ov-ai-assistant-action-deadline-date {
+  font-size: 11px;
+  color: var(--ov-ai-text-muted);
+}
+
+.ov-ai-assistant-action-countdown {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(92, 106, 196, 0.1);
+  color: var(--ov-ai-primary);
+  border: 1px solid rgba(92, 106, 196, 0.2);
+}
+
+.ov-ai-assistant-action-countdown--urgent {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--ov-ai-error);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+/* ─── Recognition Suggestions panel ─────────────────────────────────────── */
+
+.ov-ai-assistant-recognition-panel {
+  margin-top: 10px;
+}
+
+.ov-ai-assistant-recognition-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ov-ai-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.ov-ai-assistant-recognition-header svg {
+  color: #f43f5e;
+  flex-shrink: 0;
+}
+
+.ov-ai-assistant-recognition-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ov-ai-assistant-recognition-item {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+  padding: 9px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ov-ai-assistant-recognition-item-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.ov-ai-assistant-recognition-item-who {
+  font-size: 11px;
+  font-weight: 700;
+  color: #9f1239;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ov-ai-assistant-recognition-channel-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  background: rgba(244, 63, 94, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  color: #9f1239;
+  border-radius: 10px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.ov-ai-assistant-recognition-item-achievement {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ov-ai-text);
+  line-height: 1.4;
+}
+
+.ov-ai-assistant-recognition-item-vibe {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ov-ai-text-muted);
+  font-style: italic;
+  margin-top: 3px;
+}
+
+.ov-ai-assistant-recognition-empty {
+  font-size: 12px;
+  color: var(--ov-ai-text-muted);
+  font-style: italic;
+}
+
+/* ─── Take Survey — last response info ───────────────────────────────────── */
+
+#ov-ai-assistant-last-survey-info {
+  margin: 6px auto 0;
+  font-size: 11px;
+  color: var(--ov-ai-text-muted);
+  text-align: center;
+}
