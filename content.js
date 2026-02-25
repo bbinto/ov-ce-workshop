@@ -957,7 +957,12 @@
         </ul>
         ${compareHtml}
         ${unseenRecognitions !== null ? (unseenRecognitions === 0
-          ? `<p class="${EXTENSION_ID}-recognition-all-seen">All recognitions seen</p>`
+          ? `<div class="${EXTENSION_ID}-recognition-all-seen">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>All recognitions seen</span>
+            </div>`
           : `<div class="${EXTENSION_ID}-recognition-unseen-row">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -978,6 +983,23 @@
             <div class="${EXTENSION_ID}-loading">
               <div class="${EXTENSION_ID}-spinner"></div>
               <span>Analyzing score changes…</span>
+            </div>
+          </div>
+        </div>
+        <div class="${EXTENSION_ID}-team-activity-section">
+          <div class="${EXTENSION_ID}-team-activity-header">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Your team's activity
+          </div>
+          <div class="${EXTENSION_ID}-team-activity-body">
+            <div class="${EXTENSION_ID}-loading">
+              <div class="${EXTENSION_ID}-spinner"></div>
+              <span>Scanning team's Slack activity…</span>
             </div>
           </div>
         </div>
@@ -1054,6 +1076,35 @@
           const aiBody = box.querySelector(`.${EXTENSION_ID}-insights-ai-body`);
           if (aiBody) {
             aiBody.innerHTML = `<span class="${EXTENSION_ID}-error">⚠ ${escapeHtml(err.message)}</span>`;
+          }
+        });
+
+      // ── Team activity: fetch in parallel, independently of the metrics call ──
+      sendToBackground("GET_TEAM_ACTIVITY", {})
+        .then((items) => {
+          const activityBody = box.querySelector(`.${EXTENSION_ID}-team-activity-body`);
+          if (!activityBody) return;
+
+          if (!items || !items.length) {
+            activityBody.innerHTML = `<p class="${EXTENSION_ID}-team-activity-empty">No notable activity found in the last 2 days. Add team member IDs to <code>config.js</code> to enable this section.</p>`;
+            return;
+          }
+
+          activityBody.innerHTML = items.map((item) => `
+            <div class="${EXTENSION_ID}-team-activity-item">
+              <div class="${EXTENSION_ID}-team-activity-item-header">
+                <span class="${EXTENSION_ID}-team-activity-who">${escapeHtml(item.who)}</span>
+                <span class="${EXTENSION_ID}-team-activity-channel">${escapeHtml(item.channel)}</span>
+              </div>
+              <p class="${EXTENSION_ID}-team-activity-text">${escapeHtml(item.activity)}</p>
+              ${item.significance ? `<p class="${EXTENSION_ID}-team-activity-significance">${escapeHtml(item.significance)}</p>` : ""}
+            </div>`).join("");
+        })
+        .catch((err) => {
+          console.error("[OV AI] Team activity:", err);
+          const activityBody = box.querySelector(`.${EXTENSION_ID}-team-activity-body`);
+          if (activityBody) {
+            activityBody.innerHTML = `<span class="${EXTENSION_ID}-error">⚠ ${escapeHtml(err.message)}</span>`;
           }
         });
     });

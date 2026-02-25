@@ -41,6 +41,14 @@ Save it for later.
     "C000000000",
   ],
 
+  // ─── Team Members: Slack user IDs to track for "Your team's activity" ────────
+  // Add the Slack user IDs of your direct reports or key team members.
+  // User IDs look like "U012AB3CD" — find them by clicking a member's profile
+  // in Slack and selecting "Copy member ID" from the ⋮ menu.
+  TEAM_MEMBER_IDS: [
+    "U000000000",
+  ],
+
   // ─── MBTI Communication Styles ───────────────────────────────────────────────
   MBTI_STYLES: {
     INTJ: "direct, strategic, and concise — leads with logic and long-term vision, minimal small talk",

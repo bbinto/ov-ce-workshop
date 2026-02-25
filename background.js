@@ -58,6 +58,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch((err) => { console.error("[OV AI]", err); sendResponse({ success: false, error: err.message }); });
     return true;
   }
+
+  if (message.type === "GET_TEAM_ACTIVITY") {
+    handleGetTeamActivity()
+      .then((result) => sendResponse({ success: true, data: result }))
+      .catch((err) => { console.error("[OV AI]", err); sendResponse({ success: false, error: err.message }); });
+    return true;
+  }
 });
 
 // ─── Storage Helpers ──────────────────────────────────────────────────────────
@@ -696,4 +703,87 @@ Return [] if nothing recognition-worthy is found. Do not invent achievements not
   const jsonMatch = raw.match(/\[[\s\S]*\]/);
   if (!jsonMatch) return [];
   return JSON.parse(jsonMatch[0]).slice(0, 4);
+}
+
+// Search Slack for messages from configured TEAM_MEMBER_IDS in the last 2 days,
+// then ask Claude to surface the most noteworthy activities or conversations.
+async function handleGetTeamActivity() {
+  const userIds = CONFIG.TEAM_MEMBER_IDS;
+  if (!userIds || !userIds.length) return [];
+
+  const slackToken = await getSlackToken();
+  if (!slackToken) throw new Error("No Slack token configured.");
+
+  const isSessionToken = slackToken.startsWith("xoxc-") || slackToken.startsWith("xoxd-");
+
+  // Build "YYYY-MM-DD" string for Slack search's "after:" modifier
+  const twoDaysAgo = new Date(Date.now() - 2 * 86_400_000);
+  const afterDate = [
+    twoDaysAgo.getFullYear(),
+    String(twoDaysAgo.getMonth() + 1).padStart(2, "0"),
+    String(twoDaysAgo.getDate()).padStart(2, "0"),
+  ].join("-");
+
+  async function searchUserMessages(userId) {
+    const query = `from:<@${userId}> after:${afterDate}`;
+    let res;
+    if (isSessionToken) {
+      const body = new URLSearchParams({ token: slackToken, query, count: "10", highlight: "false", sort: "timestamp" });
+      res = await fetch("https://slack.com/api/search.messages", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+    } else {
+      const url = new URL("https://slack.com/api/search.messages");
+      url.searchParams.set("query", query);
+      url.searchParams.set("count", "10");
+      url.searchParams.set("highlight", "false");
+      url.searchParams.set("sort", "timestamp");
+      res = await fetch(url.toString(), {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${slackToken}` },
+      });
+    }
+    if (!res.ok) return [];
+    const data = await res.json();
+    if (!data.ok) return [];
+    return (data.messages?.matches || []).map((m) => ({
+      author:  m.username || m.user || userId,
+      text:    stripSlackMarkup(m.text).slice(0, 300),
+      date:    formatSlackTs(m.ts),
+      channel: m.channel?.name || m.channel?.id || "unknown",
+    }));
+  }
+
+  const allResults = await Promise.all(userIds.map(searchUserMessages));
+  const merged = allResults.flat();
+  if (!merged.length) return [];
+
+  const systemPrompt = `You are a team activity analyst helping a manager stay informed about their direct reports.
+
+Given recent Slack messages from specific team members (last 2 days), identify up to 5 noteworthy items: accomplishments, important decisions, significant contributions, or conversations the manager should be aware of.
+
+Return ONLY valid JSON, no markdown:
+[
+  {
+    "who": "person's display name",
+    "channel": "#channel-name",
+    "activity": "what they did or discussed in ≤15 words",
+    "significance": "why this matters to the manager in ≤12 words"
+  }
+]
+
+Return [] if nothing notable is found. Skip routine status messages. Focus on things a manager would genuinely want to know about.`;
+
+  const messageList = merged
+    .slice(0, 40)
+    .map((m, i) => `[${i}] #${m.channel} — ${m.author} (${m.date}): "${m.text}"`)
+    .join("\n");
+
+  const raw = await callClaude(systemPrompt, `Recent messages from your team members (last 2 days):\n${messageList}`);
+  const jsonMatch = raw.match(/\[[\s\S]*\]/);
+  if (!jsonMatch) return [];
+  return JSON.parse(jsonMatch[0]).slice(0, 5);
 }
