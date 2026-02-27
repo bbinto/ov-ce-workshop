@@ -19,7 +19,7 @@ Chrome extension -> Developer mode, loading the files into the Chrome browser
 Running through high-level prompts/things they will learn 
 
 ### Workshop (35min)
-- Prompting Claude Code -> extension folder (check out [MEMORY.md](Memory))
+- Prompting Claude Code -> extension folder (check out [MEMORY](MEMORY.md))
 - Loading extensions into Chrome
 - Playing around with UI/inspect/classes, fonts etc. (UI changes)
 - Q&A throughout
@@ -29,9 +29,9 @@ Running through high-level prompts/things they will learn
 - Sharing any learnings
 
 ## Ideas to add/configure
-[] Add Confetti animation to todo checkbox
-[] Personalize your Name in UI
-[] Add PTO calendar to extension
-[] Make the Take the Pulse Survey button pink
-[] Quote of the day
+[ ] Add Confetti animation to todo checkbox
+[ ] Personalize your Name in UI
+[ ] Add PTO calendar to extension
+[ ] Make the Take the Pulse Survey button pink
+[ ] Quote of the day
 
