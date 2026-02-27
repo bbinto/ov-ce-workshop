@@ -13,9 +13,9 @@
 - Other requirements: Engineering knowledge level = 0 - everyone can build an extension!
 
 ### Intro (10min)
+"Inspect" and Chrome console intro - finding classes, divs etc.
 What's a Chrome extension, different kinds and benefits
 Chrome extension -> Developer mode, loading the files into the Chrome browser
-"Inspect" and Chrome console intro
 Running through high-level prompts/things they will learn 
 
 ### Workshop (35min)
@@ -29,9 +29,9 @@ Running through high-level prompts/things they will learn
 - Sharing any learnings
 
 ## Ideas to add/configure
-[ ] Add Confetti animation to todo checkbox
-[ ] Personalize your Name in UI
-[ ] Add PTO calendar to extension
-[ ] Make the Take the Pulse Survey button pink
-[ ] Quote of the day
+- [ ] Add Confetti animation to todo checkbox
+- [ ] Personalize your Name in UI
+- [ ] Add PTO calendar to extension
+- [ ] Make the Take the Pulse Survey button pink
+- [ ] Quote of the day
 
