@@ -28,7 +28,7 @@ After loading the extension, log into Officevibe and inspect the feedback page D
 
 # Raw Prompt Notes
 
-- build a chrome extension that will be parsing officevibe.workleap.com after logged in
+- build a chrome extension that will be parsing officevibe.workleap.com after logged in. Have a popup for the Chrome extension where I can add my Claude API Key
 
 ## Insights Box
 
