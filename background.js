@@ -80,6 +80,25 @@ async function getApiKey() {
   });
 }
 
+async function getLlmProvider() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(["llmProvider"], (result) => {
+      resolve(result.llmProvider || "claude");
+    });
+  });
+}
+
+async function getGeminiSettings() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(["geminiApiKey", "geminiModel"], (result) => {
+      resolve({
+        apiKey: result.geminiApiKey || null,
+        model:  result.geminiModel  || "gemini-2.5-flash",
+      });
+    });
+  });
+}
+
 async function getMbtiType() {
   return new Promise((resolve) => {
     chrome.storage.sync.get(["mbtiType"], (result) => {
@@ -87,6 +106,7 @@ async function getMbtiType() {
     });
   });
 }
+
 
 async function getSlackToken() {
   return new Promise((resolve) => {
@@ -96,7 +116,43 @@ async function getSlackToken() {
   });
 }
 
-// ─── AI API (Claude) ───────────────────────────────────────────────────────────
+// ─── AI API ───────────────────────────────────────────────────────────────────
+
+async function callLLM(systemPrompt, userContent) {
+  const provider = await getLlmProvider();
+  return provider === "gemini"
+    ? callGemini(systemPrompt, userContent)
+    : callClaude(systemPrompt, userContent);
+}
+
+async function callGemini(systemPrompt, userContent) {
+  const { apiKey, model } = await getGeminiSettings();
+
+  if (!apiKey) {
+    throw new Error("No Gemini API key configured. Please set your Gemini API key in the extension settings.");
+  }
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ role: "user", parts: [{ text: userContent }] }],
+        generationConfig: { maxOutputTokens: 2048 },
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Gemini API error (${response.status}): ${errorBody}`);
+  }
+
+  const data = await response.json();
+  return data.candidates[0].content.parts[0].text;
+}
 
 async function callClaude(systemPrompt, userContent) {
   const { key: apiKey, model } = await getApiKey();
@@ -299,7 +355,7 @@ Return ONLY valid JSON — no markdown, no explanation. Format:
   const userContent = `Employee feedback:\n"${feedbackText}"\n\nSlack messages:\n${matchList}`;
 
   try {
-    const raw = await callClaude(systemPrompt, userContent);
+    const raw = await callLLM(systemPrompt, userContent);
     const jsonMatch = raw.match(/\[[\s\S]*\]/);
     if (!jsonMatch) return rawMatches.slice(0, 2);
 
@@ -434,7 +490,7 @@ Return ONLY the suggested response text, no preamble or explanation.`;
 
   const userContent = `Please suggest a manager response to this employee feedback:\n\n${feedbackText}${context ? `\n\nAdditional context: ${context}` : ""}`;
 
-  return await callClaude(systemPrompt, userContent);
+  return await callLLM(systemPrompt, userContent);
 }
 
 // Generate multiple reply options with different tones
@@ -476,7 +532,7 @@ Requirements:
   }
 
   const userContent = `Employee feedback: "${feedbackText}"${glassdoorContext ? `\n\n${glassdoorContext}\n\nUse Glassdoor context only if it clearly supports the response; do not force it.` : ""}`;
-  const text = await callClaude(systemPrompt, userContent);
+  const text = await callLLM(systemPrompt, userContent);
   return { text, contextUsed };
 }
 
@@ -504,7 +560,7 @@ Return ONLY valid JSON — no markdown, no explanation. Format:
 
 Return 2-3 items maximum. Only include genuinely relevant findings — do not force a match.`;
 
-  const raw = await callClaude(systemPrompt, `Employee feedback:\n"${feedbackText}"`);
+  const raw = await callLLM(systemPrompt, `Employee feedback:\n"${feedbackText}"`);
   const jsonMatch = raw.match(/\[[\s\S]*\]/);
   if (!jsonMatch) return [];
 
@@ -537,7 +593,7 @@ Format your response as JSON with this structure:
 
   const userContent = `Please analyze this batch of employee feedback:\n\n${feedbackList}`;
 
-  const text = await callClaude(systemPrompt, userContent);
+  const text = await callLLM(systemPrompt, userContent);
 
   // Parse JSON response
   const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -566,7 +622,7 @@ Return ONLY valid JSON, no markdown, no explanation:
 
   const userContent = `Engagement metric blocks:\n${metricTexts.map((t, i) => `${i + 1}. ${t}`).join("\n")}`;
 
-  const raw = await callClaude(systemPrompt, userContent);
+  const raw = await callLLM(systemPrompt, userContent);
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
   if (!jsonMatch) return { summary: raw, actions: [] };
   return JSON.parse(jsonMatch[0]);
@@ -698,7 +754,7 @@ Return ONLY valid JSON, no markdown:
 Return [] if nothing recognition-worthy is found. Do not invent achievements not present in the messages.`;
 
   const messageList = rawMessages.map((m, i) => `[${i}] #${m.channel} — ${m.author} (${m.date}): "${m.text}"`).join("\n");
-  const raw = await callClaude(systemPrompt, `Recent Slack messages (last 2 days):\n${messageList}`);
+  const raw = await callLLM(systemPrompt, `Recent Slack messages (last 2 days):\n${messageList}`);
 
   const jsonMatch = raw.match(/\[[\s\S]*\]/);
   if (!jsonMatch) return [];
@@ -782,7 +838,7 @@ Return [] if nothing notable is found. Skip routine status messages. Focus on th
     .map((m, i) => `[${i}] #${m.channel} — ${m.author} (${m.date}): "${m.text}"`)
     .join("\n");
 
-  const raw = await callClaude(systemPrompt, `Recent messages from your team members (last 2 days):\n${messageList}`);
+  const raw = await callLLM(systemPrompt, `Recent messages from your team members (last 2 days):\n${messageList}`);
   const jsonMatch = raw.match(/\[[\s\S]*\]/);
   if (!jsonMatch) return [];
   return JSON.parse(jsonMatch[0]).slice(0, 5);
